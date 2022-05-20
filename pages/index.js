@@ -1,12 +1,26 @@
 import Head from "next/head";
+import { useRef } from "react";
 import Banner from "../components/Banner";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import LargeCard from "../components/LargeCard";
 import MediumCard from "../components/MediumCard";
 import SmallCard from "../components/SmallCard";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
 
 export default function Home({ exploreData, cardsData }) {
+  const hscroll = useRef(null);
+
+  const moveRight = () => {
+    const el = hscroll.current;
+    return (el.scrollLeft += 800);
+  };
+
+  const moveLeft = () => {
+    const el = hscroll.current;
+    return (el.scrollLeft -= 800);
+  };
+
   return (
     <div className="">
       <Head>
@@ -34,10 +48,26 @@ export default function Home({ exploreData, cardsData }) {
         </section>
         <section className="pt-6">
           <h2 className="text-4xl font-semibold py-8">Live Anywhere</h2>
-          <div className="flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3">
+          <div
+            ref={hscroll}
+            className="flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3 scroll-smooth"
+          >
             {cardsData?.map(({ img, title }) => (
               <MediumCard key={img} img={img} title={title} />
             ))}
+          </div>
+          <div
+            className="relative hidden md:flex justify-between z-20 px-8"
+            style={{ marginTop: -230, marginBottom: 230 }}
+          >
+            <ChevronLeftIcon
+              onClick={moveLeft}
+              className="text-gray-900 bg-white bg-opacity-60 rounded-full p-2 w-10 h-10 cursor-pointer"
+            />
+            <ChevronRightIcon
+              onClick={moveRight}
+              className="text-gray-900 bg-white bg-opacity-60 rounded-full p-2 w-10 h-10 cursor-pointer"
+            />
           </div>
         </section>
 
