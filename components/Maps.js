@@ -26,11 +26,11 @@ const Maps = ({ searchResult }) => {
     >
       {searchResult.map((result) => (
         <div key={result.lat}>
-          <Marker latitude={result.lat} longitude={result.long} anchor="bottom" offset={[10, 10]}>
+          <Marker latitude={result.lat} longitude={result.long} anchor="bottom" offset={[12, 6]}>
             <p
               role="img"
               onClick={() => setSelectedLocation(result)}
-              className="cursor-pointer text-2xl animate-bounce"
+              className="cursor-pointer text-2xl"
               aria-label="push-pin"
             >
               📌
@@ -38,16 +38,13 @@ const Maps = ({ searchResult }) => {
           </Marker>
           {selectedLocation.lat === result.lat && (
             <Popup
-              closeButton={false}
+              onClose={() => setSelectedLocation({})}
               closeOnClick={false}
-              closeOnMove={false}
               latitude={result.lat}
               longitude={result.long}
               offset={[0, -10]}
             >
-              <div style={{cursor: 'pointer'}} onClick={() => setSelectedLocation({})}>
               {result.title}
-              </div>
             </Popup>
           )}
         </div>
