@@ -3,6 +3,7 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { getCenter } from "geolib";
 
 const Maps = ({ searchResult }) => {
+  const [selectedLocation, setSelectedLocation] = useState({});
   const coordinates = searchResult.map(({ lat, long }) => {
     return { latitude: lat, longitude: long };
   });
@@ -21,12 +22,35 @@ const Maps = ({ searchResult }) => {
       mapboxAccessToken={process.env.mapbox_key}
       initialViewState={viewport}
       style={{ width: "100%", height: "100%" }}
-      onMove={(e) => console.log('viewport: ', e)}
+      onMove={(e) => setViewport(e.viewState)}
     >
-      {searchResult.map(({ lat, long }) => (
-        <Marker key={lat} latitude={lat} longitude={long} anchor="bottom">
-          <p className="cursor-pointer text-2xl">📌</p>
-        </Marker>
+      {searchResult.map((result) => (
+        <div key={result.lat}>
+          <Marker latitude={result.lat} longitude={result.long} anchor="bottom" offset={[10, 10]}>
+            <p
+              role="img"
+              onClick={() => setSelectedLocation(result)}
+              className="cursor-pointer text-2xl animate-bounce"
+              aria-label="push-pin"
+            >
+              📌
+            </p>
+          </Marker>
+          {selectedLocation.lat === result.lat && (
+            <Popup
+              closeButton={false}
+              closeOnClick={false}
+              closeOnMove={false}
+              latitude={result.lat}
+              longitude={result.long}
+              offset={[0, -10]}
+            >
+              <div style={{cursor: 'pointer'}} onClick={() => setSelectedLocation({})}>
+              {result.title}
+              </div>
+            </Popup>
+          )}
+        </div>
       ))}
     </ReactMapGL>
   );
