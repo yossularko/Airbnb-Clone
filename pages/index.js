@@ -84,7 +84,8 @@ export default function Home({ exploreData, cardsData }) {
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
+  console.log("get cookies: ", context.req.cookies)
   const exploreData = await fetch("https://links.papareact.com/pyp").then(
     (res) => res.json()
   );
