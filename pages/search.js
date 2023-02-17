@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { format } from "date-fns";
 import InfoCard from "../components/InfoCard";
 import Maps from "../components/Maps";
+import dataSearch from "../utils/dataSearch";
 
 const myDate = (date) => {
   return format(new Date(date), "dd MMMM yy");
@@ -67,13 +68,23 @@ export default Search;
 
 export async function getServerSideProps(context) {
   console.log("context: ", context.query);
-  const searchResult = await fetch("https://links.papareact.com/isz").then(
-    (res) => res.json()
-  );
 
-  return {
-    props: {
-      searchResult,
-    },
-  };
+  try {
+    const searchResult = await fetch("https://links.papareact.com/isz").then(
+      (res) => res.json()
+    );
+
+    return {
+      props: {
+        searchResult,
+      },
+    };
+  } catch (error) {
+    console.log("error fetch: ", error);
+    return {
+      props: {
+        searchResult: dataSearch,
+      },
+    };
+  }
 }

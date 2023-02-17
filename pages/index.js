@@ -7,6 +7,8 @@ import LargeCard from "../components/LargeCard";
 import MediumCard from "../components/MediumCard";
 import SmallCard from "../components/SmallCard";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/outline";
+import dataExplore from "../utils/dataExplore";
+import dataCard from "../utils/dataCard";
 
 export default function Home({ exploreData, cardsData }) {
   const hscroll = useRef(null);
@@ -85,19 +87,40 @@ export default function Home({ exploreData, cardsData }) {
 }
 
 export async function getServerSideProps(context) {
-  console.log("get cookies: ", context.req.cookies)
-  const exploreData = await fetch("https://links.papareact.com/pyp").then(
-    (res) => res.json()
-  );
+  console.log("get cookies: ", context.req.cookies);
+  const urls = [
+    "https://links.papareact.com/pyp",
+    "https://links.papareact.com/zp1",
+  ];
 
-  const cardsData = await fetch("https://links.papareact.com/zp1").then((res) =>
-    res.json()
-  );
+  try {
+    const response = await Promise.all(
+      urls.map(async (promise) => {
+        const dataFetch = await fetch(promise);
+        const dataJson = await dataFetch.json();
 
-  return {
-    props: {
-      exploreData,
-      cardsData,
-    },
-  };
+        return dataJson;
+      })
+    );
+
+    const dataObj = response.reduce((accumulator, value, index) => {
+      return { ...accumulator, [`data${index + 1}`]: value };
+    }, {});
+
+    return {
+      props: {
+        exploreData: dataObj.data1,
+        cardsData: dataObj.data2,
+      },
+    };
+  } catch (error) {
+    console.log("error fetch: ", error);
+
+    return {
+      props: {
+        exploreData: dataExplore,
+        cardsData: dataCard,
+      },
+    };
+  }
 }
