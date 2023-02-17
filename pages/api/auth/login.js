@@ -3,7 +3,7 @@ import { serialize } from "cookie";
 
 const secret = process.env.SECRET;
 
-export default async function (req, res) {
+export default async function login(req, res) {
   const { email, password } = req.body;
 
   if (email === "admin@dev.com" && password === "21232123") {

@@ -1,4 +1,4 @@
-export default async function (req, res) {
+export default async function user(req, res) {
   const { cookies } = req;
 
   const jwt = cookies.airbnbtoken;
